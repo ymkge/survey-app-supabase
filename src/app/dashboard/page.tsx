@@ -2,7 +2,8 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import PollList from "@/components/PollList"; // 後で実装
+import PollList from "@/components/PollList";
+import { PlusCircle } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -15,27 +16,31 @@ export default async function DashboardPage() {
     return redirect("/");
   }
 
-  // ユーザー名を取得 (例: emailの@より前の部分)
   const userName = user.email ? user.email.split('@')[0] : "ゲスト";
 
-  // TODO: アンケート一覧の取得ロジックを実装
-
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-8">
-      <header className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          ようこそ、{userName}さん！
-        </h1>
-        <Link href="/dashboard/create">
-          <Button>新しいアンケートを作成</Button>
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+      <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 pb-4 border-b">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            ようこそ、{userName}さん！
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            アンケートを作成・管理しましょう。
+          </p>
+        </div>
+        <Link href="/dashboard/create" className="mt-4 sm:mt-0">
+          <Button>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            新しいアンケートを作成
+          </Button>
         </Link>
       </header>
 
       <section>
-        <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+        <h2 className="text-2xl font-semibold tracking-tight mb-6">
           あなたのアンケート
         </h2>
-        {/* PollList コンポーネントでアンケート一覧を表示 */}
         <PollList />
       </section>
     </div>

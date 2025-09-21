@@ -6,7 +6,12 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { motion, AnimatePresence } from "framer-motion";
+import { PlusCircle, Trash2, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
 interface Option {
   id: number;
@@ -17,7 +22,7 @@ const PollForm = () => {
   const [title, setTitle] = useState('');
   const [options, setOptions] = useState<Option[]>([{ id: 1, text: '' }, { id: 2, text: '' }]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const supabase = createClient();
 
@@ -26,7 +31,8 @@ const PollForm = () => {
   };
 
   const addOption = () => {
-    setOptions([...options, { id: options.length + 1, text: '' }]);
+    const newId = options.length > 0 ? Math.max(...options.map(o => o.id)) + 1 : 1;
+    setOptions([...options, { id: newId, text: '' }]);
   };
 
   const removeOption = (id: number) => {
@@ -36,24 +42,23 @@ const PollForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setError(null);
 
     const validOptions = options.filter(option => option.text.trim() !== '');
     if (!title.trim() || validOptions.length < 2) {
-      setMessage('アンケートのタイトルと2つ以上の選択肢を入力してください。');
+      setError('アンケートのタイトルと2つ以上の選択肢を入力してください。');
       setLoading(false);
       return;
     }
 
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      setMessage('ログインしてください。');
+      setError('ログインしてください。');
       setLoading(false);
       return;
     }
 
     try {
-      // polls テーブルに挿入
       const { data: poll, error: pollError } = await supabase
         .from('polls')
         .insert({ title, user_id: user.id })
@@ -64,7 +69,6 @@ const PollForm = () => {
         throw new Error(pollError?.message || 'アンケートの作成に失敗しました。');
       }
 
-      // options テーブルに挿入
       const optionsToInsert = validOptions.map(option => ({
         poll_id: poll.id,
         text: option.text,
@@ -77,13 +81,12 @@ const PollForm = () => {
         throw new Error(optionsError.message || '選択肢の作成に失敗しました。');
       }
 
-      setMessage('アンケートが正常に作成されました！');
-      router.push(`/poll/${poll.id}`); // 作成したアンケートの詳細ページへリダイレクト
-    } catch (error: unknown) { // 型を unknown に変更
+      router.push(`/poll/${poll.id}`);
+    } catch (error: unknown) {
       if (error instanceof Error) {
-        setMessage(error.message);
+        setError(error.message);
       } else {
-        setMessage('不明なエラーが発生しました。');
+        setError('不明なエラーが発生しました。');
       }
     } finally {
       setLoading(false);
@@ -91,59 +94,103 @@ const PollForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle className="text-center">新しいアンケートを作成</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {message && <p className="text-sm text-red-500 dark:text-red-400">{message}</p>}
-          <div>
+    <form onSubmit={handleSubmit}>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>新しいアンケートを作成</CardTitle>
+          <CardDescription>質問と選択肢を入力して、新しいアンケートを作成します。</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {error && (
+            <Alert variant="destructive">
+              <Terminal className="h-4 w-4" />
+              <AlertTitle>エラー</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <div className="space-y-2">
             <Label htmlFor="title">アンケートの質問</Label>
             <Input
               id="title"
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="例: どちらの製品が好きですか？"
+              placeholder="例: 次の旅行はどこに行きたい？"
               required
+              className="text-lg"
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2">
             <Label>選択肢</Label>
-            {options.map((option, index) => (
-              <div key={option.id} className="flex items-center space-x-2">
-                <Input
-                  type="text"
-                  value={option.text}
-                  onChange={(e) => handleOptionChange(option.id, e.target.value)}
-                  placeholder={`選択肢 ${index + 1}`}
-                  required
-                />
-                {options.length > 2 && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeOption(option.id)}
-                  >
-                    削除
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addOption} className="w-full">
+            <div className="rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>選択肢の内容</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <AnimatePresence>
+                    {options.map((option, index) => (
+                      <motion.tr
+                        key={option.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.2 }}
+                        className="hover:bg-muted/50"
+                      >
+                        <TableCell>
+                          <Input
+                            type="text"
+                            value={option.text}
+                            onChange={(e) => handleOptionChange(option.id, e.target.value)}
+                            placeholder={`選択肢 ${index + 1}`}
+                            required
+                            className="border-none focus-visible:ring-0"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {options.length > 2 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => removeOption(option.id)}
+                              className="text-muted-foreground hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          )}
+                        </TableCell>
+                      </motion.tr>
+                    ))}
+                  </AnimatePresence>
+                </TableBody>
+              </Table>
+            </div>
+            <Button type="button" variant="outline" onClick={addOption} className="w-full mt-2">
+              <PlusCircle className="mr-2 h-4 w-4" />
               選択肢を追加
             </Button>
           </div>
-
+        </CardContent>
+        <CardFooter>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? '作成中...' : 'アンケートを作成'}
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                作成中...
+              </>
+            ) : (
+              'アンケートを作成'
+            )}
           </Button>
-        </form>
-      </CardContent>
-    </Card>
+        </CardFooter>
+      </Card>
+    </form>
   );
 };
 
