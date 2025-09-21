@@ -1,4 +1,4 @@
-# Realtime Survey App
+# survey-app-supabase
 
 リアルタイムで投票結果が更新されるアンケートアプリケーションです。
 
@@ -29,8 +29,8 @@
 ### 1. リポジトリのクローン
 
 ```bash
-git clone https://github.com/<your-username>/realtime-survey-app.git
-cd realtime-survey-app
+git clone https://github.com/<your-username>/survey-app-supabase.git
+cd survey-app-supabase
 ```
 
 ### 2. 依存関係のインストール
