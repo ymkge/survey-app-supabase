@@ -1,0 +1,12 @@
+
+**試行29: `globals.css` の `@layer base` ブロックを `@tailwind base;` の前に移動 (再試行)**
+*   **内容:** `src/app/globals.css` の `@layer base` ブロック全体を、`@tailwind base;` の前に移動。
+*   **結果:** デザイン適用されず。
+
+**試行30: `tailwind.config.js` の読み込み問題の再確認と `npx tailwindcss init -p` の実行失敗**
+*   **内容:** `tailwind.config.js` が読み込まれていない問題の再確認。`npx tailwindcss init -p` を実行しようとしたが、`npm error could not determine executable to run` エラーが発生。
+*   **結果:** `tailwind.config.js` が読み込まれていないことが判明。`npx tailwindcss init -p` が実行できない。
+
+**試行31: `tailwindcss` グローバルインストール問題の特定**
+*   **内容:** `npm root -g` でグローバルインストールパスを確認。`ls -F <global_path>/bin/tailwindcss` で `tailwindcss` コマンドが存在しないことを確認。
+*   **結果:** `npm install -g tailwindcss` を実行しても `tailwindcss` コマンドが生成されない、npm のグローバルインストール環境の根本的な問題である可能性が高いと結論。

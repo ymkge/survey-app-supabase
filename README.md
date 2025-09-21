@@ -1,73 +1,41 @@
-# survey-app-supabase
+# リアルタイムアンケートアプリ
 
-リアルタイムで投票結果が更新されるアンケートアプリケーションです。
+このプロジェクトは、リアルタイムで結果が更新されるアンケートアプリです。
 
-## 概要
+## 開発環境のセットアップ
 
-このアプリケーションでは、ユーザーがアンケートを作成し、他のユーザーが投票できます。投票結果はリアルタイムでグラフに反映されます。
+...
 
-## 主な機能
+## デザインの適用に関する問題 (未解決)
 
-- **ユーザー認証:** Supabase Authを利用したメールアドレスとパスワードによる認証機能。
-- **アンケート作成:** 認証済みユーザーは新しいアンケートを作成できます。
-- **アンケート一覧:** 作成されたアンケートの一覧を表示します。
-- **投票機能:** 各アンケートに対して、ユーザーは1つの選択肢に投票できます。
-- **リアルタイム結果表示:** 投票結果をリアルタイムで円グラフに表示します。
+現在、Tailwind CSS を使用したデザインの適用に問題が発生しています。
+以下の問題が未解決です。
 
-## 技術スタック
+### 1. 開発環境の根本的な問題
 
-- **フレームワーク:** [Next.js](https://nextjs.org/) (App Router)
-- **言語:** [TypeScript](https://www.typescriptlang.org/)
-- **データベース & 認証:** [Supabase](https://supabase.io/)
-- **UI:** [Tailwind CSS](https://tailwindcss.com/), [Shadcn/ui](https://ui.shadcn.com/)
-- **グラフ:** [Recharts](https://recharts.org/)
-- **フォーム管理:** [React Hook Form](https://react-hook-form.com/)
-- **リンター:** [ESLint](https://eslint.org/)
+`npm install -g tailwindcss` を実行しても `tailwindcss` コマンドがグローバルインストールディレクトリの `bin` サブディレクトリに生成されない問題が発生しています。これは、npm の破損、Node.js/nvm の問題、またはパーミッションの問題が考えられます。
 
-## 環境構築
+**解決策の提案:**
+この問題は、Next.js や Tailwind CSS の設定の問題ではなく、npm のグローバルインストール環境の根本的な問題である可能性が高いです。以下の手順を試すことをお勧めします。
 
-### 1. リポジトリのクローン
+*   **npm キャッシュのクリア:** `npm cache clean --force` を実行。
+*   **npm の自己修復:** `npm install -g npm@latest` を実行して、npm 自体を最新バージョンに更新。
+*   **Node.js / nvm の再インストール:** nvm を使用している場合、Node.js を完全にアンインストールし、再インストールを検討。
+*   **パーミッションの確認:** グローバルインストールディレクトリへの書き込み権限を確認。
 
-```bash
-git clone https://github.com/<your-username>/survey-app-supabase.git
-cd survey-app-supabase
-```
+### 2. Tailwind CSS の設定の再確認 (上記問題解決後)
 
-### 2. 依存関係のインストール
+開発環境の根本的な問題が解決した後、以下の Tailwind CSS の設定を再確認する必要があります。
 
-```bash
-npm install
-```
+*   `npx tailwindcss init -p` を実行して `tailwind.config.js` と `postcss.config.js` を再生成する。
+*   `tailwind.config.js` の `content` 設定が正しいか確認する。
+*   `globals.css` のカスタムカラー定義と `tailwind.config.js` の `colors` 定義が正しく連携しているか確認する。
+*   `postcss.config.mjs` の設定が正しいか確認する。
+*   Next.js のバージョン (`v12.3.4`) と Tailwind CSS v3 の組み合わせで、カスタムカラーが正しく適用されるか確認する。
 
-### 3. 環境変数の設定
+---
 
-Supabaseプロジェクトを作成し、以下の情報を記載した`.env.local`ファイルをプロジェクトルートに作成します。
+**デバッグログ:**
 
-```
-NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
-```
-
-### 4. 開発サーバーの起動
-
-```bash
-npm run dev
-```
-
-[http://localhost:3000](http://localhost:3000) にアクセスしてアプリケーションを表示します。
-
-## ディレクトリ構成の概要
-
-```
-.
-├── src
-│   ├── app/              # Next.jsのApp Routerページ
-│   │   ├── dashboard/    # ダッシュボードページ
-│   │   ├── poll/[id]/    # 投票・結果表示ページ
-│   │   └── ...
-│   ├── components/       # 再利用可能なUIコンポーネント
-│   │   └── ui/           # Shadcn/uiのコンポーネント
-│   └── lib/              # ライブラリ、ユーティリティ
-│       └── supabase/     # Supabaseクライアント設定
-└── ...
-```
+これまでの詳細なデバッグ履歴は、`troubleshooting_log.txt` ファイルに記録されています。
+問題解決の再開時にご参照ください。

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import AuthForm from "@/components/AuthForm"; // 後で作成
 
 export default async function Index() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const {
     data: { user },

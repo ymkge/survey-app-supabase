@@ -1,76 +1,65 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --color-background: 255 255 255; /* RGB */
+    --color-foreground: 10 23 44; /* RGB */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --color-card: 255 255 255; /* RGB */
+    --color-card-foreground: 10 23 44; /* RGB */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --color-popover: 255 255 255; /* RGB */
+    --color-popover-foreground: 10 23 44; /* RGB */
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --color-primary: 28 40 68; /* RGB */
+    --color-primary-foreground: 245 247 250; /* RGB */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --color-secondary: 230 234 237; /* RGB */
+    --color-secondary-foreground: 28 40 68; /* RGB */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --color-muted: 230 234 237; /* RGB */
+    --color-muted-foreground: 119 130 145; /* RGB */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --color-accent: 230 234 237; /* RGB */
+    --color-accent-foreground: 28 40 68; /* RGB */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --color-destructive: 220 38 38; /* RGB */
+    --color-destructive-foreground: 245 247 250; /* RGB */
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --color-border: 217 223 229; /* RGB */
+    --color-input: 217 223 229; /* RGB */
+    --color-ring: 10 23 44; /* RGB */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --color-background: 10 23 44; /* RGB */
+    --color-foreground: 245 247 250; /* RGB */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --color-card: 10 23 44; /* RGB */
+    --color-card-foreground: 245 247 250; /* RGB */
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --color-popover: 10 23 44; /* RGB */
+    --color-popover-foreground: 245 247 250; /* RGB */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --color-primary: 245 247 250; /* RGB */
+    --color-primary-foreground: 28 40 68; /* RGB */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --color-secondary: 44 58 76; /* RGB */
+    --color-secondary-foreground: 245 247 250; /* RGB */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --color-muted: 44 58 76; /* RGB */
+    --color-muted-foreground: 166 172 180; /* RGB */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --color-accent: 44 58 76; /* RGB */
+    --color-accent-foreground: 245 247 250; /* RGB */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --color-destructive: 153 27 27; /* RGB */
+    --color-destructive-foreground: 245 247 250; /* RGB */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --color-border: 44 58 76; /* RGB */
+    --color-input: 44 58 76; /* RGB */
+    --color-ring: 204 210 217; /* RGB */
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

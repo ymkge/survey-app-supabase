@@ -2,8 +2,8 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies' // 型をインポート
 
-export function createClient() {
-  const cookieStore: ReadonlyRequestCookies = cookies() // 型を明示的に指定
+export async function createClient() {
+  const cookieStore: ReadonlyRequestCookies = await cookies() // 型を明示的に指定
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

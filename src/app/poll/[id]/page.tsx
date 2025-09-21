@@ -11,8 +11,8 @@ export default async function PollDetailPage({
   params: { id: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const supabase = createClient();
-  const { id: pollId } = params;
+  const supabase = await createClient();
+  const pollId = params.id;
 
   // アンケート情報を取得
   const { data: poll, error: pollError } = await supabase
@@ -53,7 +53,7 @@ export default async function PollDetailPage({
 
   const handleVote = async (optionId: string) => {
     "use server";
-    const supabase = createClient();
+    const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
